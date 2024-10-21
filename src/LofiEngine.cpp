@@ -1,13 +1,6 @@
 #include "LofiEngine.h"
-
-#define GLAD_GL_IMPLEMENTATION
-#include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
-#include <cstdio>
-
-#define LOGF(...) printf(__VA_ARGS__)
+#include "Common.h"
+#include "LofiGraphics.h"
 
 namespace Lofi
 {
@@ -24,8 +17,9 @@ namespace Lofi
 		LOGF("ERROR: %d, %s\n", ErrorNo, ErrorDesc);
 	}
 
-	void HandleKeyInput(GLFWwindow* InWindow, int InKey, int ScanCode, int Action, int Modifers)
+	void HandleKeyInput(GLFWwindow* InWindow, int InKey, int ScanCode, int Action, int Modifiers)
 	{
+		(void)ScanCode; (void)Action; (void)Modifiers;
 		switch (InKey)
 		{
 			case GLFW_KEY_ESCAPE:
@@ -39,6 +33,12 @@ namespace Lofi
 
 	constexpr int SuccessRetval = 0;
 	constexpr int ErrorRetval = -1;
+
+	bool HandleArgs(int argc, const char* argv[])
+	{
+		(void)argc; (void)argv;
+		return true;
+	}
 
 	bool EngineInit()
 	{
@@ -59,6 +59,8 @@ namespace Lofi
 		gladLoadGL(glfwGetProcAddress);
 		glfwSwapInterval(1);
 
+		Graphics::Init();
+
 		return true;
 	}
 
@@ -67,11 +69,9 @@ namespace Lofi
 		bool bRunning = true;
 		while (bRunning)
 		{
-			glClear(GL_COLOR_BUFFER_BIT);
+			Graphics::Draw(GlobalState.AppWindow);
 
-			glfwSwapBuffers(GlobalState.AppWindow);
 			glfwPollEvents();
-
 			if (glfwWindowShouldClose(GlobalState.AppWindow))
 			{
 				bRunning = false;
@@ -96,6 +96,7 @@ namespace Lofi
 	int Main(int argc, const char* argv[])
 	{
 		bool Result = true;
+		Result &= HandleArgs(argc, argv);
 		Result &= EngineInit();
 		Result &= EngineMainLoop();
 		Result &= EngineTerminate();

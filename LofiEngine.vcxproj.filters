@@ -4,15 +4,62 @@
     <Filter Include="src">
       <UniqueIdentifier>{4ae97795-5a2d-498a-be6c-4846a73d10a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>{4f219cc4-fb17-42e0-a964-a0b4e298ea27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glfw">
+      <UniqueIdentifier>{9f175c23-ade2-4f8e-93ae-b4ba58a66019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glfw\include">
+      <UniqueIdentifier>{ef2864ee-d621-40c7-bd16-79d35b013eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glfw\lib">
+      <UniqueIdentifier>{2eb76285-777c-4c70-863e-680d5accb563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glad">
+      <UniqueIdentifier>{46a22cce-6908-481d-8c55-748496f8d4a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glad\include">
+      <UniqueIdentifier>{4af396ed-b85c-4a60-9ff7-511d5c421bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glad\src">
+      <UniqueIdentifier>{0a98be4d-e227-471c-bb2a-2dd4a7632352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glad\include\glad">
+      <UniqueIdentifier>{32c3697a-cb20-48fe-9aac-e844a9f9f354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glad\include\KHR">
+      <UniqueIdentifier>{699bc483-48e3-40ea-abd4-d45cedd13acb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LofiEngine.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\glad\src\gl.c">
+      <Filter>libs\glad\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LofiEngine.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="libs\glfw-precompiled-win64\include\GLFW\glfw3.h">
+      <Filter>libs\glfw\include</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\glfw-precompiled-win64\include\GLFW\glfw3native.h">
+      <Filter>libs\glfw\include</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\glad\include\glad\gl.h">
+      <Filter>libs\glad\include\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\glad\include\KHR\khrplatform.h">
+      <Filter>libs\glad\include\KHR</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\glfw-precompiled-win64\lib-vc2022\glfw3_mt.lib">
+      <Filter>libs\glfw\lib</Filter>
+    </Library>
   </ItemGroup>
 </Project>

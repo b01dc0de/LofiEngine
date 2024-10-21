@@ -39,6 +39,9 @@
     <ClCompile Include="libs\glad\src\gl.c">
       <Filter>libs\glad\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LofiEngine.h">

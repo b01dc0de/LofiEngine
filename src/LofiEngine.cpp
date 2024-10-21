@@ -2,96 +2,103 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-//#define GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <cstdio>
 
-void HandleError(int ErrorNo, const char* ErrorDesc)
-{
-	printf("ERROR: %d, %s\n", ErrorNo, ErrorDesc);
-}
+#define LOGF(...) printf(__VA_ARGS__)
 
-void HandleKeyInput(GLFWwindow* InWindow, int InKey, int ScanCode, int Action, int Modifers)
+namespace Lofi
 {
-	switch (InKey)
+	struct AppState
 	{
-		case GLFW_KEY_ESCAPE:
-		{
-			glfwSetWindowShouldClose(InWindow, GLFW_TRUE);
-		} break;
-		default:
-		{ } break;
+		const int AppWidth = 640;
+		const int AppHeight = 480;
+		GLFWwindow* AppWindow = nullptr;
+	};
+	AppState GlobalState;
+
+	void HandleError(int ErrorNo, const char* ErrorDesc)
+	{
+		LOGF("ERROR: %d, %s\n", ErrorNo, ErrorDesc);
 	}
-}
 
-static const int AppWidth = 640;
-static const int AppHeight = 480;
-static GLFWwindow* AppWindow = nullptr;
+	void HandleKeyInput(GLFWwindow* InWindow, int InKey, int ScanCode, int Action, int Modifers)
+	{
+		switch (InKey)
+		{
+			case GLFW_KEY_ESCAPE:
+			{
+				glfwSetWindowShouldClose(InWindow, GLFW_TRUE);
+			} break;
+			default:
+			{} break;
+		}
+	}
 
-int MainGLFW() { return 0; }
-
-int main()
-{
 	constexpr int SuccessRetval = 0;
 	constexpr int ErrorRetval = -1;
 
-	printf("LofiEngine -- Init\n");
-
-	if (!glfwInit())
+	bool EngineInit()
 	{
-		printf("glfwInit FAILED!\n");
-		return ErrorRetval;
-	}
+		LOGF("LofiEngine -- Init\n");
 
-	// glfwInit SUCCESS
-	{
+		if (!glfwInit()) { return false; }
+
 		glfwSetErrorCallback(HandleError);
 
-		GLFWwindow* NewWindow = glfwCreateWindow(AppWidth, AppHeight, "LofiEngine", nullptr, nullptr);
-		if (!NewWindow)
+		GLFWwindow* NewWindow = glfwCreateWindow(GlobalState.AppWidth, GlobalState.AppHeight, "LofiEngine", nullptr, nullptr);
+		if (!NewWindow) { LOGF("glfwCreateWindow FAILED!\n"); return false; }
+
+		GlobalState.AppWindow = NewWindow;
+
+		glfwSetKeyCallback(GlobalState.AppWindow, HandleKeyInput);
+
+		glfwMakeContextCurrent(GlobalState.AppWindow);
+		gladLoadGL(glfwGetProcAddress);
+		glfwSwapInterval(1);
+
+		return true;
+	}
+
+	bool EngineMainLoop()
+	{
+		bool bRunning = true;
+		while (bRunning)
 		{
-			printf("glfwCreateWindow FAILED!\n");
-			return ErrorRetval;
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			glfwSwapBuffers(GlobalState.AppWindow);
+			glfwPollEvents();
+
+			if (glfwWindowShouldClose(GlobalState.AppWindow))
+			{
+				bRunning = false;
+			}
 		}
-		else
+		
+		return true;
+	}
+
+	bool EngineTerminate()
+	{
+		if (GlobalState.AppWindow)
 		{
-			// Init
-			{
-				AppWindow = NewWindow;
-
-				glfwSetKeyCallback(AppWindow, HandleKeyInput);
-
-				glfwMakeContextCurrent(AppWindow);
-				gladLoadGL(glfwGetProcAddress);
-				glfwSwapInterval(1);
-			}
-
-			// MainLoop
-			{
-				bool bRunning = true;
-				while (bRunning)
-				{
-					glClear(GL_COLOR_BUFFER_BIT);
-
-					glfwSwapBuffers(AppWindow);
-					glfwPollEvents();
-
-					if (glfwWindowShouldClose(AppWindow))
-					{
-						bRunning = false;
-					}
-				}
-			}
-
-			// Terminate
-			{
-				glfwDestroyWindow(AppWindow);
-			}
+			glfwDestroyWindow(GlobalState.AppWindow);
 		}
 
 		glfwTerminate();
+
+		return true;
 	}
 
-	return SuccessRetval;
+	int Main(int argc, const char* argv[])
+	{
+		bool Result = true;
+		Result &= EngineInit();
+		Result &= EngineMainLoop();
+		Result &= EngineTerminate();
+		return Result ? SuccessRetval : ErrorRetval;
+	}
 }

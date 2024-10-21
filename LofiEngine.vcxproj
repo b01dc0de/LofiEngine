@@ -46,6 +46,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>W:\LofiEngine\libs\glfw\include;W:\LofiEngine\libs\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>W:\LofiEngine\libs\glfw-3.4.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir\out\win\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\out\win\interm\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>W:\LofiEngine\libs\glfw\include;W:\LofiEngine\libs\glad\include;$(IncludePath)</IncludePath>
@@ -84,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="libs\glad\src\gl.c" />
     <ClCompile Include="src\LofiEngine.cpp" />
+    <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\glad\include\glad\gl.h" />

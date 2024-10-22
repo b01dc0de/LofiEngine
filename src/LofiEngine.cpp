@@ -4,15 +4,17 @@
 
 namespace Lofi
 {
-    struct AppState
-    {
-        //const int AppWidth = 640;
-        //const int AppHeight = 480;
-        const int AppWidth = 1280;
-        const int AppHeight = 960;
-        GLFWwindow* AppWindow = nullptr;
-    };
-    AppState GlobalState;
+	const int ResXs[] = { 640, 1280 };
+	const int ResYs[] = { 480, 960 };
+	struct AppState
+	{
+		//const int AppWidth = ResXs[0];
+		//const int AppHeight = ResYs[0];
+		const int AppWidth = ResXs[1];
+		const int AppHeight = ResYs[1];
+		GLFWwindow* AppWindow = nullptr;
+	};
+	AppState GlobalState;
 
     void HandleError(int ErrorNo, const char* ErrorDesc)
     {

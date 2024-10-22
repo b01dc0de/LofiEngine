@@ -61,7 +61,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>W:\LofiEngine\libs\glfw\include;W:\LofiEngine\libs\glad\include;W:\LofiEngine\libs\HandmadeMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>W:\LofiEngine\libs\glfw\include;W:\LofiEngine\libs\glad\include;W:\LofiEngine\libs\HandmadeMath;W:\LofiEngine\libs\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -98,6 +98,7 @@
     <ClInclude Include="libs\glfw-precompiled-win64\include\GLFW\glfw3.h" />
     <ClInclude Include="libs\glfw-precompiled-win64\include\GLFW\glfw3native.h" />
     <ClInclude Include="libs\HandmadeMath\HandmadeMath.h" />
+    <ClInclude Include="libs\stb\stb_image.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\LofiEngine.h" />
     <ClInclude Include="src\LofiGraphics.h" />
@@ -108,6 +109,8 @@
   <ItemGroup>
     <None Include="src\glsl\vxcolor_f.glsl" />
     <None Include="src\glsl\vxcolor_v.glsl" />
+    <None Include="src\glsl\vxtex_f.glsl" />
+    <None Include="src\glsl\vxtex_v.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

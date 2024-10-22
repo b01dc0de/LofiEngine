@@ -4,3 +4,6 @@
 [submodule "libs/HandmadeMath"]
 	path = libs/HandmadeMath
 	url = https://github.com/HandmadeMath/HandmadeMath.git
+[submodule "libs/stb"]
+	path = libs/stb
+	url = https://github.com/nothings/stb.git

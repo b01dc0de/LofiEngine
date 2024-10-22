@@ -40,6 +40,9 @@
     <Filter Include="libs\HandmadeHero\src">
       <UniqueIdentifier>{a6fc34ed-3f76-43f6-9261-c60da5d9858c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libs\stb">
+      <UniqueIdentifier>{da71181a-88b8-4454-9a15-ddd167698bb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LofiEngine.cpp">
@@ -80,6 +83,9 @@
     <ClInclude Include="libs\HandmadeMath\HandmadeMath.h">
       <Filter>libs\HandmadeHero\src</Filter>
     </ClInclude>
+    <ClInclude Include="libs\stb\stb_image.h">
+      <Filter>libs\stb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw-precompiled-win64\lib-vc2022\glfw3_mt.lib">
@@ -91,6 +97,12 @@
       <Filter>src\glsl</Filter>
     </None>
     <None Include="src\glsl\vxcolor_v.glsl">
+      <Filter>src\glsl</Filter>
+    </None>
+    <None Include="src\glsl\vxtex_f.glsl">
+      <Filter>src\glsl</Filter>
+    </None>
+    <None Include="src\glsl\vxtex_v.glsl">
       <Filter>src\glsl</Filter>
     </None>
   </ItemGroup>

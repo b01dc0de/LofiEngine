@@ -1,4 +1,5 @@
 #define GLAD_GL_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 #include "Common.h"
 #include "LofiEngine.h"
 

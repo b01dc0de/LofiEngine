@@ -12,7 +12,7 @@ namespace Lofi
 		vxcolor{{ 0.0f,  0.6f, 0.0f}, { 0.0f, 0.0f, 1.0f}},
 	};
 
-	constexpr float fCubeUnit = 0.25f;
+	constexpr float fCubeUnit = 0.5f;
 	const v3f Color_LightGray{0.75f, 0.75f, 0.75f};
 	const v3f Color_DarkGray{ 0.25f, 0.25f, 0.25f };
 	const v3f Color_White{ 1.f, 1.f, 1.f };
@@ -52,10 +52,10 @@ namespace Lofi
 				2-------3           7-------6
 
 		    Top:             Bottom:
-				4-------5           6-------7
+				4-------5           7-------6
 				|       |           |       |
 				|       |           |       |
-				0-------1           2-------3
+				0-------1           3-------2
 
 		   Left:              Right:
 				4-------0           1-------5
@@ -76,8 +76,8 @@ namespace Lofi
 		0, 5, 4,
 		0, 1, 5,
 		// Bottom
-		2, 7, 6,
-		2, 3, 7,
+		3, 6, 7,
+		3, 2, 6,
 		// Left
 		6, 0, 4,
 		6, 2, 0,
@@ -193,8 +193,14 @@ namespace Lofi
 		glEnableVertexAttribArray(GraphicsState.vcol_location);
 		glVertexAttribPointer(GraphicsState.vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vxcolor), (void*)offsetof(vxcolor, col));
 
+		// Depth testing:
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS); // default: GL_LESS
+
+		// Face culling:
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CCW);
 	}
 
 	float GetAspectRatio(float Width, float Height)
@@ -223,7 +229,8 @@ namespace Lofi
 		// HMM_Mat4 HMM_LookAt_RH(HMM_Vec3 Eye, HMM_Vec3 Center, HMM_Vec3 Up)
 		const HMM_Vec3 GlobalUp{ 0.f, 1.f, 0.f };
 		const HMM_Vec3 Origin{ 0.f, 0.f, 0.f };
-		HMM_Mat4 mvp_lookat = HMM_LookAt_RH(HMM_Vec3{0.15f, 0.15f, -0.5f}, Origin, GlobalUp);
+		const HMM_Vec3 CameraPos{ 0.15f, 0.15f, -0.15f };
+		HMM_Mat4 mvp_lookat = HMM_LookAt_RH(CameraPos, Origin, GlobalUp);
 
 		const GLfloat* mvp = (const GLfloat*)&mvp_lookat;
 		static bool bUseOrtho = false;

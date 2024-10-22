@@ -4,5 +4,5 @@
 
 int main(int argc, const char* argv[])
 {
-	return Lofi::Main(argc, argv);
+    return Lofi::Main(argc, argv);
 }

@@ -6,8 +6,10 @@ namespace Lofi
 {
 	struct AppState
 	{
-		const int AppWidth = 640;
-		const int AppHeight = 480;
+		//const int AppWidth = 640;
+		//const int AppHeight = 480;
+		const int AppWidth = 1280;
+		const int AppHeight = 960;
 		GLFWwindow* AppWindow = nullptr;
 	};
 	AppState GlobalState;

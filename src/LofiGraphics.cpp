@@ -12,21 +12,22 @@ namespace Lofi
 		vxcolor{{ 0.0f,  0.6f, 0.0f}, { 0.0f, 0.0f, 1.0f}},
 	};
 
-	constexpr float fCubeUnit = 0.5f;
+	constexpr float fCubeUnit = 0.25f;
 	const v3f Color_LightGray{0.75f, 0.75f, 0.75f};
 	const v3f Color_DarkGray{ 0.25f, 0.25f, 0.25f };
+	const v3f Color_White{ 1.f, 1.f, 1.f };
 	const vxcolor CubeVertices[] =
 	{
 		// Front
 		vxcolor{{fCubeUnit, fCubeUnit, -fCubeUnit}, {1.0f, 0.0f, 0.0f}},
 		vxcolor{{-fCubeUnit, fCubeUnit, -fCubeUnit}, {0.0f, 1.0f, 0.0f}},
 		vxcolor{{fCubeUnit, -fCubeUnit, -fCubeUnit}, {0.0f, 0.0f, 1.0f}},
-		vxcolor{{-fCubeUnit, -fCubeUnit, -fCubeUnit}, Color_LightGray},
+		vxcolor{{-fCubeUnit, -fCubeUnit, -fCubeUnit}, Color_White},
 		// Back
 		vxcolor{{fCubeUnit, fCubeUnit, fCubeUnit}, {0.0f, 1.0f, 1.0f}},
 		vxcolor{{-fCubeUnit, fCubeUnit, fCubeUnit}, {1.0f, 0.0f, 1.0f}},
 		vxcolor{{fCubeUnit, -fCubeUnit, fCubeUnit}, {1.0f, 1.0f, 0.0f}},
-		vxcolor{{-fCubeUnit, -fCubeUnit, fCubeUnit}, Color_DarkGray},
+		vxcolor{{-fCubeUnit, -fCubeUnit, fCubeUnit}, Color_White},
 	};
 
 	/*
@@ -51,7 +52,7 @@ namespace Lofi
 				2-------3           7-------6
 
 		    Top:             Bottom:
-				5-------4           6-------7
+				4-------5           6-------7
 				|       |           |       |
 				|       |           |       |
 				0-------1           2-------3
@@ -69,11 +70,11 @@ namespace Lofi
 		2, 1, 0,
 		2, 3, 1,
 		// Back
-		8, 4, 5,
-		8, 7, 4,
+		7, 4, 5,
+		7, 6, 4,
 		// Top
-		0, 4, 5,
-		0, 1, 4,
+		0, 5, 4,
+		0, 1, 5,
 		// Bottom
 		2, 7, 6,
 		2, 3, 7,
@@ -83,27 +84,6 @@ namespace Lofi
 		// Right
 		3, 5, 1,
 		3, 7, 5,
-	};
-	const GLuint CubeIndicesCW[] =
-	{
-		// Front
-		2, 0, 1,
-		2, 1, 3,
-		// Back
-		8, 5, 4,
-		8, 4, 7,
-		// Top
-		0, 5, 4,
-		0, 4, 1,
-		// Bottom
-		2, 6, 7,
-		2, 7, 3,
-		// Left
-		6, 4, 0,
-		6, 0, 2,
-		// Right
-		3, 1, 5,
-		3, 5, 7,
 	};
 
 	struct ShaderFileSource
@@ -192,12 +172,12 @@ namespace Lofi
 		GraphicsState.vpos_location = glGetAttribLocation(GraphicsState.gfx_pipeline, "vPos");
 		GraphicsState.vcol_location = glGetAttribLocation(GraphicsState.gfx_pipeline, "vCol");
 
-		glGenBuffers(1, &GraphicsState.tri_vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.tri_vertex_buffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
+		//glGenBuffers(1, &GraphicsState.tri_vertex_buffer);
+		//glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.tri_vertex_buffer);
+		//glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
 
-		glGenVertexArrays(1, &GraphicsState.tri_vertex_array);
-		glBindVertexArray(GraphicsState.tri_vertex_array);
+		//glGenVertexArrays(1, &GraphicsState.tri_vertex_array);
+		//glBindVertexArray(GraphicsState.tri_vertex_array);
 
 		{ // Cube
 			glGenBuffers(1, &GraphicsState.cube_vertex_buffer);
@@ -212,6 +192,9 @@ namespace Lofi
 		glVertexAttribPointer(GraphicsState.vpos_location, 3, GL_FLOAT, GL_FALSE, sizeof(vxcolor), (void*)offsetof(vxcolor, pos));
 		glEnableVertexAttribArray(GraphicsState.vcol_location);
 		glVertexAttribPointer(GraphicsState.vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vxcolor), (void*)offsetof(vxcolor, col));
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS); // default: GL_LESS
 	}
 
 	float GetAspectRatio(float Width, float Height)
@@ -233,19 +216,21 @@ namespace Lofi
 		float AspectRatio = GetAspectRatio(Width, Height);
 
 		glViewport(0, 0, Width, Height);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// HMM_Mat4 HMM_Orthographic_RH_NO(float Left, float Right, float Bottom, float Top, float Near, float Far)
 		HMM_Mat4 mvp_ortho = HMM_Orthographic_RH_NO(-AspectRatio, AspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
 		// HMM_Mat4 HMM_LookAt_RH(HMM_Vec3 Eye, HMM_Vec3 Center, HMM_Vec3 Up)
-		HMM_Mat4 mvp_lookat = HMM_LookAt_RH(HMM_Vec3{0.25f, 0.25f, -0.5f}, HMM_Vec3{0.f, 0.f, 0.f}, HMM_Vec3{ 0.f, 1.f, 0.f });
+		const HMM_Vec3 GlobalUp{ 0.f, 1.f, 0.f };
+		const HMM_Vec3 Origin{ 0.f, 0.f, 0.f };
+		HMM_Mat4 mvp_lookat = HMM_LookAt_RH(HMM_Vec3{0.15f, 0.15f, -0.5f}, Origin, GlobalUp);
 
-		const HMM_Mat4* mvp = &mvp_lookat;
+		const GLfloat* mvp = (const GLfloat*)&mvp_lookat;
 		static bool bUseOrtho = false;
-		if (bUseOrtho) { mvp = &mvp_ortho; }
+		if (bUseOrtho) { mvp = (const GLfloat*)&mvp_ortho; }
 		
 		glUseProgram(GraphicsState.gfx_pipeline);
-		glUniformMatrix4fv(GraphicsState.mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
+		glUniformMatrix4fv(GraphicsState.mvp_location, 1, GL_FALSE, mvp);
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 		if (bUseOrtho)
@@ -256,8 +241,7 @@ namespace Lofi
 		else
 		{
 			glBindVertexArray(GraphicsState.cube_vertex_array);
-			//glDrawElements(GL_TRIANGLES, ARRAY_SIZE(CubeIndicesCW), GL_UNSIGNED_INT, CubeIndicesCW);
-			glDrawElements(GL_TRIANGLES, ARRAY_SIZE(CubeIndices), GL_UNSIGNED_INT, CubeIndices);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, CubeIndices);
 		}
 
 		glfwSwapBuffers(InWindow);

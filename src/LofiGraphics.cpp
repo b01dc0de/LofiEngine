@@ -104,10 +104,16 @@ namespace Lofi
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// HMM_Mat4 HMM_Orthographic_RH_NO(float Left, float Right, float Bottom, float Top, float Near, float Far)
-		HMM_Mat4 mvp = HMM_Orthographic_RH_NO(-AspectRatio, AspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
+		HMM_Mat4 mvp_ortho = HMM_Orthographic_RH_NO(-AspectRatio, AspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
+		// HMM_Mat4 HMM_LookAt_RH(HMM_Vec3 Eye, HMM_Vec3 Center, HMM_Vec3 Up)
+		HMM_Mat4 mvp_lookat = HMM_LookAt_RH(HMM_Vec3{0.f, 0.f, -0.5f}, HMM_Vec3{}, HMM_Vec3{ 0.f, 1.f, 0.f });
 
+		const HMM_Mat4* mvp = &mvp_lookat;
+		static bool bUseOrtho = false;
+		if (bUseOrtho) { mvp = &mvp_ortho; }
+		
 		glUseProgram(GraphicsState.gfx_pipeline);
-		glUniformMatrix4fv(GraphicsState.mvp_location, 1, GL_FALSE, (const GLfloat*)&mvp);
+		glUniformMatrix4fv(GraphicsState.mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
 		glBindVertexArray(GraphicsState.vertex_array);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 

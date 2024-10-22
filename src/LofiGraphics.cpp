@@ -1,11 +1,10 @@
 #include "LofiGraphics.h"
 #include "Common.h"
 
-#include "linmath.h"
+#include "HandmadeMath.h"
 
 namespace Lofi
 {
-
 	const vxcolor Vertices[] =
 	{
 		vxcolor{{-0.6f, -0.4f, 0.0f}, { 1.0f, 0.0f, 0.0f}},
@@ -104,10 +103,8 @@ namespace Lofi
 		glViewport(0, 0, Width, Height);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		mat4x4 m, p, mvp;
-		mat4x4_identity(m);
-		mat4x4_ortho(p, -AspectRatio, AspectRatio, -1.f, 1.f, 1.f, -1.f);
-		mat4x4_mul(mvp, p, m);
+		// HMM_Mat4 HMM_Orthographic_RH_NO(float Left, float Right, float Bottom, float Top, float Near, float Far)
+		HMM_Mat4 mvp = HMM_Orthographic_RH_NO(-AspectRatio, AspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
 
 		glUseProgram(GraphicsState.gfx_pipeline);
 		glUniformMatrix4fv(GraphicsState.mvp_location, 1, GL_FALSE, (const GLfloat*)&mvp);

@@ -5,33 +5,64 @@
 
 namespace Lofi
 {
-	const vxcolor Vertices[] =
+	const vxcolor TriangleVertices[] =
 	{
 		vxcolor{{-0.6f, -0.4f, 0.0f}, { 1.0f, 0.0f, 0.0f}},
 		vxcolor{{ 0.6f, -0.4f, 0.0f}, { 0.0f, 1.0f, 0.0f}},
 		vxcolor{{ 0.0f,  0.6f, 0.0f}, { 0.0f, 0.0f, 1.0f}},
 	};
 
-	GLchar* LoadShaderSource(const char* Filename)
+	const vxcolor CubeVertices[] =
 	{
-		GLchar* Result = nullptr;
+		vxcolor{{}, {}},
+		vxcolor{{}, {}},
+		vxcolor{{}, {}},
+		vxcolor{{}, {}},
+		vxcolor{{}, {}},
+		vxcolor{{}, {}},
+	};
 
-		FILE* ShaderFile = nullptr;
-		fopen_s(&ShaderFile, Filename, "rb");
-		if (ShaderFile)
+	struct ShaderFileSource
+	{
+		GLchar* Contents = nullptr;
+
+		operator GLchar* ()
 		{
-			fseek(ShaderFile, 0, SEEK_END);
-			size_t FileSize = ftell(ShaderFile);
-			fseek(ShaderFile, 0, SEEK_SET);
-
-			Result = new GLchar[FileSize + 1];
-			fread(Result, sizeof(GLchar), FileSize, ShaderFile);
-			Result[FileSize] = 0x00;
-			fclose(ShaderFile);
+			return Contents;
 		}
+		GLchar** operator&()
+		{
+			return &Contents;
+		}
+		bool IsValid()
+		{
+			return nullptr != Contents;
+		}
+		ShaderFileSource(const char* Filename)
+		{
+			GLchar* Result = nullptr;
 
-		return Result;
-	}
+			FILE* ShaderFile = nullptr;
+			fopen_s(&ShaderFile, Filename, "rb");
+			if (ShaderFile)
+			{
+				fseek(ShaderFile, 0, SEEK_END);
+				size_t FileSize = ftell(ShaderFile);
+				fseek(ShaderFile, 0, SEEK_SET);
+
+				Result = new GLchar[FileSize + 1];
+				fread(Result, sizeof(GLchar), FileSize, ShaderFile);
+				Result[FileSize] = 0x00;
+				fclose(ShaderFile);
+			}
+
+			if (Result) { Contents = Result; }
+		}
+		~ShaderFileSource()
+		{
+			if (Contents) { delete[] Contents; }
+		}
+	};
 
 	struct
 	{
@@ -49,21 +80,24 @@ namespace Lofi
 	{
 		glGenBuffers(1, &GraphicsState.vertex_buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.vertex_buffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
 
-		GLchar* vshader_source = LoadShaderSource("src/glsl/vxcolor_v.glsl");
-		GLchar* fshader_source = LoadShaderSource("src/glsl/vxcolor_f.glsl");
+		ShaderFileSource vshader_src{ "src/glsl/vxcolor_v.glsl" };
+		ShaderFileSource fshader_src{ "src/glsl/vxcolor_f.glsl" };
+
+		if (!(vshader_src.IsValid() && fshader_src.IsValid()))
+		{
+			return;
+		}
 
 		GraphicsState.vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(GraphicsState.vertex_shader, 1, &vshader_source, nullptr);
+		glShaderSource(GraphicsState.vertex_shader, 1, &vshader_src, nullptr);
 		glCompileShader(GraphicsState.vertex_shader);
 
-		GraphicsState.fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(GraphicsState.fragment_shader, 1, &fshader_source, nullptr);
-		glCompileShader(GraphicsState.fragment_shader);
 
-		delete[] vshader_source;
-		delete[] fshader_source;
+		GraphicsState.fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(GraphicsState.fragment_shader, 1, &fshader_src, nullptr);
+		glCompileShader(GraphicsState.fragment_shader);
 
 		GraphicsState.gfx_pipeline = glCreateProgram();
 		glAttachShader(GraphicsState.gfx_pipeline, GraphicsState.vertex_shader);

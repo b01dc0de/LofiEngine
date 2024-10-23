@@ -369,6 +369,8 @@ namespace Lofi
         }
 
         { // Global GL settings
+            glClearColor(0.2f, 0.1f, 0.2f, 1.0f);
+
             // Depth testing:
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS); // default: GL_LESS

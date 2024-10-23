@@ -14,18 +14,29 @@ namespace Lofi
     const v3f Color_LightGray{ 0.75f, 0.75f, 0.75f };
     const v3f Color_DarkGray{ 0.25f, 0.25f, 0.25f };
     const v3f Color_White{ 1.f, 1.f, 1.f };
+
+    const v3f CubeV_FrontTopL{fCubeUnit, fCubeUnit, -fCubeUnit};
+    const v3f CubeV_FrontTopR{-fCubeUnit, fCubeUnit, -fCubeUnit};
+    const v3f CubeV_FrontBotL{fCubeUnit, -fCubeUnit, -fCubeUnit};
+    const v3f CubeV_FrontBotR{-fCubeUnit, -fCubeUnit, -fCubeUnit};
+
+    const v3f CubeV_BackTopL{fCubeUnit, fCubeUnit, fCubeUnit};
+    const v3f CubeV_BackTopR{-fCubeUnit, fCubeUnit, fCubeUnit};
+    const v3f CubeV_BackBotL{fCubeUnit, -fCubeUnit, fCubeUnit};
+    const v3f CubeV_BackBotR{-fCubeUnit, -fCubeUnit, fCubeUnit};
+
     const vxcolor CubeVertices[] =
     {
         // Front
-        vxcolor{{fCubeUnit, fCubeUnit, -fCubeUnit}, {1.0f, 0.0f, 0.0f}},
-        vxcolor{{-fCubeUnit, fCubeUnit, -fCubeUnit}, {0.0f, 1.0f, 0.0f}},
-        vxcolor{{fCubeUnit, -fCubeUnit, -fCubeUnit}, {0.0f, 0.0f, 1.0f}},
-        vxcolor{{-fCubeUnit, -fCubeUnit, -fCubeUnit}, Color_White},
+        vxcolor{CubeV_FrontTopL, {1.0f, 0.0f, 0.0f}},
+        vxcolor{CubeV_FrontTopR, {0.0f, 1.0f, 0.0f}},
+        vxcolor{CubeV_FrontBotL, {0.0f, 0.0f, 1.0f}},
+        vxcolor{CubeV_FrontBotR, Color_White},
         // Back
-        vxcolor{{fCubeUnit, fCubeUnit, fCubeUnit}, {0.0f, 1.0f, 1.0f}},
-        vxcolor{{-fCubeUnit, fCubeUnit, fCubeUnit}, {1.0f, 0.0f, 1.0f}},
-        vxcolor{{fCubeUnit, -fCubeUnit, fCubeUnit}, {1.0f, 1.0f, 0.0f}},
-        vxcolor{{-fCubeUnit, -fCubeUnit, fCubeUnit}, Color_White},
+        vxcolor{CubeV_BackTopL, {0.0f, 1.0f, 1.0f}},
+        vxcolor{CubeV_BackTopR, {1.0f, 0.0f, 1.0f}},
+        vxcolor{CubeV_BackBotL, {1.0f, 1.0f, 0.0f}},
+        vxcolor{CubeV_BackBotR, Color_White},
     };
 
     /* REFERENCE: Right-handed axes
@@ -86,15 +97,15 @@ namespace Lofi
     const vxtex Reference_TexCubeVerts[] =
     {
         // Front
-        vxtex{{fCubeUnit, fCubeUnit, -fCubeUnit}, {0.0f, 0.0f}},
-        vxtex{{-fCubeUnit, fCubeUnit, -fCubeUnit}, {1.0f, 0.0f}},
-        vxtex{{fCubeUnit, -fCubeUnit, -fCubeUnit}, {0.0f, 1.0f}},
-        vxtex{{-fCubeUnit, -fCubeUnit, -fCubeUnit}, {1.0f, 1.0f}},
+        vxtex{CubeV_FrontTopL, {0.0f, 0.0f}},
+        vxtex{CubeV_FrontTopR, {1.0f, 0.0f}},
+        vxtex{CubeV_FrontBotL, {0.0f, 1.0f}},
+        vxtex{CubeV_FrontBotR, {1.0f, 1.0f}},
         // Back
-        vxtex{{fCubeUnit, fCubeUnit, fCubeUnit}, {0.0f, 0.0f}},
-        vxtex{{-fCubeUnit, fCubeUnit, fCubeUnit}, {1.0f, 0.0f}},
-        vxtex{{fCubeUnit, -fCubeUnit, fCubeUnit}, {0.0f, 1.0f}},
-        vxtex{{-fCubeUnit, -fCubeUnit, fCubeUnit}, {1.0f, 1.0f}},
+        vxtex{CubeV_BackTopL, {0.0f, 0.0f}},
+        vxtex{CubeV_BackTopR, {1.0f, 0.0f}},
+        vxtex{CubeV_BackBotL, {0.0f, 1.0f}},
+        vxtex{CubeV_BackBotR, {1.0f, 1.0f}},
     };
 
     // UV-textured cube
@@ -202,7 +213,7 @@ namespace Lofi
         }
     };
 
-    struct
+    struct GraphicsState_t
     {
         GLuint tri_vertex_buffer = 0;
         GLuint tri_vertex_array = 0;
@@ -227,10 +238,13 @@ namespace Lofi
         GLint vxtex_vpos_location = 0;
         GLint vxtex_vuv_location = 0;
 
+        GLuint reftexcube_vertex_buffer = 0;
+        GLuint reftexcube_vertex_array = 0;
+
         GLuint test_texture = 0;
     } GraphicsState;
 
-    struct
+    struct ImageState_t
     {
         int Width = 0;
         int Height = 0;
@@ -241,12 +255,12 @@ namespace Lofi
     {
         { // Init vertex buffers
             { // Triangle
-                //glGenBuffers(1, &GraphicsState.tri_vertex_buffer);
-                //glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.tri_vertex_buffer);
-                //glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
+                glGenBuffers(1, &GraphicsState.tri_vertex_buffer);
+                glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.tri_vertex_buffer);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVerts), TriangleVerts, GL_STATIC_DRAW);
 
-                //glGenVertexArrays(1, &GraphicsState.tri_vertex_array);
-                //glBindVertexArray(GraphicsState.tri_vertex_array);
+                glGenVertexArrays(1, &GraphicsState.tri_vertex_array);
+                glBindVertexArray(GraphicsState.tri_vertex_array);
             }
 
             { // Cube
@@ -287,14 +301,24 @@ namespace Lofi
             glVertexAttribPointer(GraphicsState.vxcolor_vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vxcolor), (void*)offsetof(vxcolor, col));
         }
 
-        { // TexCube
-            glGenBuffers(1, &GraphicsState.texcube_vertex_buffer);
-            glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.texcube_vertex_buffer);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(TexCubeVerts), TexCubeVerts, GL_STATIC_DRAW);
-            //glBufferData(GL_ARRAY_BUFFER, sizeof(Reference_TexCubeVerts), Reference_TexCubeVerts, GL_STATIC_DRAW);
+        {
+            { // RefTexCube
+                glGenBuffers(1, &GraphicsState.reftexcube_vertex_buffer);
+                glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.reftexcube_vertex_buffer);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(Reference_TexCubeVerts), Reference_TexCubeVerts, GL_STATIC_DRAW);
 
-            glGenVertexArrays(1, &GraphicsState.texcube_vertex_array);
-            glBindVertexArray(GraphicsState.texcube_vertex_array);
+                glGenVertexArrays(1, &GraphicsState.reftexcube_vertex_array);
+                glBindVertexArray(GraphicsState.reftexcube_vertex_array);
+            }
+
+            { // TexCube
+                glGenBuffers(1, &GraphicsState.texcube_vertex_buffer);
+                glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.texcube_vertex_buffer);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(TexCubeVerts), TexCubeVerts, GL_STATIC_DRAW);
+
+                glGenVertexArrays(1, &GraphicsState.texcube_vertex_array);
+                glBindVertexArray(GraphicsState.texcube_vertex_array);
+            }
         }
 
         ShaderFileSource vxtex_vshader_src{ "src/glsl/vxtex_v.glsl" };
@@ -327,7 +351,6 @@ namespace Lofi
 
         { // Load test_texture
             unsigned char* TestTextureData = stbi_load("assets/feels.jpg", &ImageState.Width, &ImageState.Height, &ImageState.nrChannels, 0);
-
             if (TestTextureData)
             {
                 glGenTextures(1, &GraphicsState.test_texture);
@@ -383,7 +406,9 @@ namespace Lofi
         // HMM_Mat4 HMM_LookAt_RH(HMM_Vec3 Eye, HMM_Vec3 Center, HMM_Vec3 Up)
         const HMM_Vec3 GlobalUp{ 0.f, 1.f, 0.f };
         const HMM_Vec3 Origin{ 0.f, 0.f, 0.f };
-        const HMM_Vec3 CameraPos{ 0.15f, 0.15f, -0.15f };
+        const float fCamDist = 0.15f;
+        const float CurrTime = (float)glfwGetTime();
+        const HMM_Vec3 CameraPos{ fCamDist*HMM_CosF(CurrTime), fCamDist, -fCamDist*HMM_SinF(CurrTime)};
         HMM_Mat4 mvp_lookat = HMM_LookAt_RH(CameraPos, Origin, GlobalUp);
 
         const GLfloat* mvp = (const GLfloat*)&mvp_lookat;
@@ -395,6 +420,7 @@ namespace Lofi
             glUseProgram(GraphicsState.vxcolor_gfx_pipeline);
             glUniformMatrix4fv(GraphicsState.vxcolor_mvp_location, 1, GL_FALSE, mvp);
 
+            //glBindBuffer(GL_ARRAY_BUFFER, GraphicsState.tri_vertex_buffer);
             glBindVertexArray(GraphicsState.tri_vertex_array);
             glDrawArrays(GL_TRIANGLES, 0, 3);
         }
@@ -406,10 +432,19 @@ namespace Lofi
                 glUseProgram(GraphicsState.vxtex_pipeline);
                 glUniformMatrix4fv(GraphicsState.vxtex_mvp_location, 1, GL_FALSE, mvp);
 
-                glBindVertexArray(GraphicsState.texcube_vertex_array);
                 glBindTexture(GL_TEXTURE_2D, GraphicsState.test_texture);
-                //glDrawElements(GL_TRIANGLES, ARRAY_SIZE(CubeInds), GL_UNSIGNED_INT, CubeInds);
-                glDrawElements(GL_TRIANGLES, ARRAY_SIZE(TexCubeInds), GL_UNSIGNED_INT, TexCubeInds);
+                const bool bUseReference = false;
+                if (bUseReference)
+                {
+                    glBindVertexBuffer(GL_ARRAY_BUFFER, GraphicsState.texcube_vertex_buffer, 0, sizeof(vxtex));
+                    glBindVertexArray(GraphicsState.reftexcube_vertex_array);
+                    glDrawElements(GL_TRIANGLES, ARRAY_SIZE(CubeInds), GL_UNSIGNED_INT, CubeInds);
+                }
+                else
+                {
+                    glBindVertexArray(GraphicsState.texcube_vertex_array);
+                    glDrawElements(GL_TRIANGLES, ARRAY_SIZE(TexCubeInds), GL_UNSIGNED_INT, TexCubeInds);
+                }
             }
             else
             {

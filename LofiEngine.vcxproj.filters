@@ -31,6 +31,18 @@
     <Filter Include="libs\glad\include\KHR">
       <UniqueIdentifier>{699bc483-48e3-40ea-abd4-d45cedd13acb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\glsl">
+      <UniqueIdentifier>{28d33cc0-4ce2-419b-b00b-b1bbf31c9afe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\HandmadeHero">
+      <UniqueIdentifier>{d1eeb111-1c87-48a1-9385-576e48262df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\HandmadeHero\src">
+      <UniqueIdentifier>{a6fc34ed-3f76-43f6-9261-c60da5d9858c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\stb">
+      <UniqueIdentifier>{da71181a-88b8-4454-9a15-ddd167698bb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LofiEngine.cpp">
@@ -40,6 +52,9 @@
       <Filter>libs\glad\src</Filter>
     </ClCompile>
     <ClCompile Include="src\Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LofiGraphics.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,10 +74,36 @@
     <ClInclude Include="libs\glad\include\KHR\khrplatform.h">
       <Filter>libs\glad\include\KHR</Filter>
     </ClInclude>
+    <ClInclude Include="src\Common.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LofiGraphics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\HandmadeMath\HandmadeMath.h">
+      <Filter>libs\HandmadeHero\src</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\stb\stb_image.h">
+      <Filter>libs\stb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw-precompiled-win64\lib-vc2022\glfw3_mt.lib">
       <Filter>libs\glfw\lib</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\glsl\vxcolor_f.glsl">
+      <Filter>src\glsl</Filter>
+    </None>
+    <None Include="src\glsl\vxcolor_v.glsl">
+      <Filter>src\glsl</Filter>
+    </None>
+    <None Include="src\glsl\vxtex_f.glsl">
+      <Filter>src\glsl</Filter>
+    </None>
+    <None Include="src\glsl\vxtex_v.glsl">
+      <Filter>src\glsl</Filter>
+    </None>
   </ItemGroup>
 </Project>

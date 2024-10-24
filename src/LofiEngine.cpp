@@ -4,102 +4,106 @@
 
 namespace Lofi
 {
+	const int ResXs[] = { 640, 1280 };
+	const int ResYs[] = { 480, 960 };
 	struct AppState
 	{
-		const int AppWidth = 640;
-		const int AppHeight = 480;
+		//const int AppWidth = ResXs[0];
+		//const int AppHeight = ResYs[0];
+		const int AppWidth = ResXs[1];
+		const int AppHeight = ResYs[1];
 		GLFWwindow* AppWindow = nullptr;
 	};
 	AppState GlobalState;
 
-	void HandleError(int ErrorNo, const char* ErrorDesc)
-	{
-		LOGF("ERROR: %d, %s\n", ErrorNo, ErrorDesc);
-	}
+    void HandleError(int ErrorNo, const char* ErrorDesc)
+    {
+        LOGF("ERROR: %d, %s\n", ErrorNo, ErrorDesc);
+    }
 
-	void HandleKeyInput(GLFWwindow* InWindow, int InKey, int ScanCode, int Action, int Modifiers)
-	{
-		(void)ScanCode; (void)Action; (void)Modifiers;
-		switch (InKey)
-		{
-			case GLFW_KEY_ESCAPE:
-			{
-				glfwSetWindowShouldClose(InWindow, GLFW_TRUE);
-			} break;
-			default:
-			{} break;
-		}
-	}
+    void HandleKeyInput(GLFWwindow* InWindow, int InKey, int ScanCode, int Action, int Modifiers)
+    {
+        (void)ScanCode; (void)Action; (void)Modifiers;
+        switch (InKey)
+        {
+            case GLFW_KEY_ESCAPE:
+            {
+                glfwSetWindowShouldClose(InWindow, GLFW_TRUE);
+            } break;
+            default:
+            {} break;
+        }
+    }
 
-	constexpr int SuccessRetval = 0;
-	constexpr int ErrorRetval = -1;
+    constexpr int SuccessRetval = 0;
+    constexpr int ErrorRetval = -1;
 
-	bool HandleArgs(int argc, const char* argv[])
-	{
-		(void)argc; (void)argv;
-		return true;
-	}
+    bool HandleArgs(int argc, const char* argv[])
+    {
+        (void)argc; (void)argv;
+        return true;
+    }
 
-	bool EngineInit()
-	{
-		LOGF("LofiEngine -- Init\n");
+    bool EngineInit()
+    {
+        LOGF("LofiEngine -- Init\n");
 
-		if (!glfwInit()) { return false; }
+        if (!glfwInit()) { return false; }
 
-		glfwSetErrorCallback(HandleError);
+        glfwSetErrorCallback(HandleError);
 
-		GLFWwindow* NewWindow = glfwCreateWindow(GlobalState.AppWidth, GlobalState.AppHeight, "LofiEngine", nullptr, nullptr);
-		if (!NewWindow) { LOGF("glfwCreateWindow FAILED!\n"); return false; }
+        GLFWwindow* NewWindow = glfwCreateWindow(GlobalState.AppWidth, GlobalState.AppHeight, "LofiEngine", nullptr, nullptr);
+        if (!NewWindow) { LOGF("glfwCreateWindow FAILED!\n"); return false; }
 
-		GlobalState.AppWindow = NewWindow;
+        GlobalState.AppWindow = NewWindow;
 
-		glfwSetKeyCallback(GlobalState.AppWindow, HandleKeyInput);
+        glfwSetKeyCallback(GlobalState.AppWindow, HandleKeyInput);
 
-		glfwMakeContextCurrent(GlobalState.AppWindow);
-		gladLoadGL(glfwGetProcAddress);
-		glfwSwapInterval(1);
+        glfwMakeContextCurrent(GlobalState.AppWindow);
+        gladLoadGL(glfwGetProcAddress);
+        glfwSwapInterval(1);
 
-		Graphics::Init();
+        Graphics::Init();
 
-		return true;
-	}
+        return true;
+    }
 
-	bool EngineMainLoop()
-	{
-		bool bRunning = true;
-		while (bRunning)
-		{
-			Graphics::Draw(GlobalState.AppWindow);
+    bool EngineMainLoop()
+    {
+        bool bRunning = true;
+        while (bRunning)
+        {
+            Graphics::Draw(GlobalState.AppWindow);
 
-			glfwPollEvents();
-			if (glfwWindowShouldClose(GlobalState.AppWindow))
-			{
-				bRunning = false;
-			}
-		}
-		
-		return true;
-	}
+            glfwPollEvents();
+            if (glfwWindowShouldClose(GlobalState.AppWindow))
+            {
+                bRunning = false;
+            }
+        }
 
-	bool EngineTerminate()
-	{
-		if (GlobalState.AppWindow)
-		{
-			glfwDestroyWindow(GlobalState.AppWindow);
-		}
+        return true;
+    }
 
-		glfwTerminate();
+    bool EngineTerminate()
+    {
+        if (GlobalState.AppWindow)
+        {
+            glfwDestroyWindow(GlobalState.AppWindow);
+        }
 
-		return true;
-	}
+        glfwTerminate();
 
-	int Main(int argc, const char* argv[])
-	{
-		bool Result = true;
-		Result &= HandleArgs(argc, argv);
-		Result &= EngineInit();
-		Result &= EngineMainLoop();
-		Result &= EngineTerminate();
-		return Result ? SuccessRetval : ErrorRetval;
-	}
+        return true;
+    }
+
+    int Main(int argc, const char* argv[])
+    {
+        bool Result = true;
+        Result &= HandleArgs(argc, argv);
+        Result &= EngineInit();
+        Result &= EngineMainLoop();
+        Result &= EngineTerminate();
+        return Result ? SuccessRetval : ErrorRetval;
+    }
 }

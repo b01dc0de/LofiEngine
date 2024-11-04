@@ -408,12 +408,15 @@ namespace Lofi
         // HMM_Mat4 HMM_LookAt_RH(HMM_Vec3 Eye, HMM_Vec3 Center, HMM_Vec3 Up)
         const HMM_Vec3 GlobalUp{ 0.f, 1.f, 0.f };
         const HMM_Vec3 Origin{ 0.f, 0.f, 0.f };
-        const float fCamDist = 0.15f;
+        const float fCamDist = 2.5;
+        const float fFOVDegrees = 45.0f;
         const float CurrTime = (float)glfwGetTime();
         const HMM_Vec3 CameraPos{ fCamDist*HMM_CosF(CurrTime), fCamDist, -fCamDist*HMM_SinF(CurrTime)};
-        HMM_Mat4 mvp_lookat = HMM_LookAt_RH(CameraPos, Origin, GlobalUp);
+        HMM_Mat4 mvp_persp_proj = HMM_Perspective_RH_NO(fFOVDegrees, AspectRatio, 0.1f, 1000.0f);
+        HMM_Mat4 mvp_persp_view = HMM_LookAt_RH(CameraPos, Origin, GlobalUp);
+        HMM_Mat4 mvp_persp = mvp_persp_proj * mvp_persp_view;
 
-        const GLfloat* mvp = (const GLfloat*)&mvp_lookat;
+        const GLfloat* mvp = (const GLfloat*)&mvp_persp;
         static bool bUseOrtho = false;
         if (bUseOrtho) { mvp = (const GLfloat*)&mvp_ortho; }
 

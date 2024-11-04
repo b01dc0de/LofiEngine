@@ -1,17 +1,16 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+/*-----BEGIN LIBRARIES-----*/
 // GLAD / GLFW
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-
 // STB
-#include "stb_image.h"
-
+#include <stb/stb_image.h>
 // Handmade Math
-#include <HandmadeMath.h>
-
+#include <HandmadeMath/HandmadeMath.h>
+/*----- END  LIBRARIES-----*/
 // Standard Library
 #include <cstdio>
 

@@ -43,6 +43,9 @@
     <Filter Include="libs\stb">
       <UniqueIdentifier>{da71181a-88b8-4454-9a15-ddd167698bb3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\game">
+      <UniqueIdentifier>{1a3ee559-c240-4afc-97d0-f81edace2050}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LofiEngine.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="src\LofiGraphics.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Speedcube.cpp">
+      <Filter>src\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="libs\stb\stb_image.h">
       <Filter>libs\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Speedcube.h">
+      <Filter>src\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

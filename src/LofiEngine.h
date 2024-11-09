@@ -3,7 +3,7 @@
 
 namespace Lofi
 {
-    int Main(int argc, const char* argv[]);
+int Main(int argc, const char* argv[]);
 }
 
 #endif // LOFIENGINE_H

@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="libs\glad\src\gl.c" />
+    <ClCompile Include="src\game\Speedcube.cpp" />
     <ClCompile Include="src\LofiEngine.cpp" />
     <ClCompile Include="src\LofiGraphics.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="libs\HandmadeMath\HandmadeMath.h" />
     <ClInclude Include="libs\stb\stb_image.h" />
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\game\Speedcube.h" />
     <ClInclude Include="src\LofiEngine.h" />
     <ClInclude Include="src\LofiGraphics.h" />
   </ItemGroup>
